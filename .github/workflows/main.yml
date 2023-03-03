@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: test
         run: | 
-          ls /home/runner/work/bucketlist/bucketlist/
+          sudo find / -name config.ovpn
       - name: Install OpenVPN
         run: |
           sudo apt-get update
