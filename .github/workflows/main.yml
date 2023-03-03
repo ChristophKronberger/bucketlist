@@ -27,11 +27,8 @@ jobs:
       - name: Build Image
         run: mvn spring-boot:build-image -Dspring-boot.build-image.imageName=bucketlist
 
+      - name: List Images
+        run: docker images
 
-      - name: Publish to Docker Hub
-        uses: docker/build-push-action@v1
-        with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
-          repository: reg.wintern.at
-          tags: ${{github.run_number}}
+      - name: Push to repo
+        run: docker push reg.wintern.at/bucketlist:latest
