@@ -29,7 +29,7 @@ jobs:
 
     -
       name: Build Image
-      run: mvn spring-boot:build-image -Dspring-boot.build-image.imageName=bucketlist
+      run: mvn spring-boot:build-image -Dspring-boot.build-image.imageName=bucketlist:develop
     -
       name: List Images
       run: docker images
