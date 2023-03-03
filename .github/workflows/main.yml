@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: test
         run: | 
-          sudo find / -name config.ovpn
+          sudo echo $(find / -name config.ovpn)
       - name: Install OpenVPN
         run: |
           sudo apt-get update
