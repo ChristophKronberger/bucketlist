@@ -6,7 +6,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -25,10 +24,19 @@ jobs:
           password: ${{ secrets.DOCKER_REG_PW }}
 
       - name: Build Image
-        run: mvn spring-boot:build-image -Dspring-boot.build-image.imageName=bucketlist
+        run: mvn spring-boot:build-image
+
+      - name: Tag Image
+        run: docker tag reg.wintern.at/bucketlist:latest reg.wintern.at/bucketlist:develop
 
       - name: List Images
         run: docker images
 
       - name: Push to repo
-        run: docker push reg.wintern.at/bucketlist:latest
+        run: docker push reg.wintern.at/bucketlist:develop
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: test
+        run: echo test
