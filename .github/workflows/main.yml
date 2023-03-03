@@ -28,7 +28,7 @@ jobs:
         run: sudo openvpn --config "/home/runner/work/bucketlist/bucketlist/.github/vpn/config.ovpn" --log "vpn.log" --daemon
 
       - name: Wait for a VPN connection
-        timeout-seconds: 15
+        timeout-minutes: 1
         run: until ping -c1 ${{ secrets.STAGE_MASCHINE_IP }}; do sleep 2; done
       - name: SSH
         run: |
