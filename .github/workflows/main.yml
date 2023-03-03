@@ -40,7 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: test
-        run: echo test
+        run: sudo echo test
       - name: Install OpenVPN
         run: |
           sudo apt-get update
@@ -48,7 +48,7 @@ jobs:
       - name: Setup VPN config
         run: |
           echo "${{ secrets.CA_CRT }}" > ca.crt
-          echo "${{ secrets.SECRET_USERNAME_PASSWORD }}" > secret.txt
+          echo "${{ secrets.STAGE_VPN_USER_PASSWORD }}" > secret.txt
           echo "${{ secrets.TLS_KEY }}" > tls.key
       - name: Connect VPN
         run: sudo openvpn --config ".github/vpn/config.ovpn" --log "vpn.log" --daemon
