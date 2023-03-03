@@ -40,7 +40,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: test
-        run: sudo echo test
+        run: | 
+          pwd
+          cd /
+          pwd
+          cd 
+          pwd
       - name: Install OpenVPN
         run: |
           sudo apt-get update
