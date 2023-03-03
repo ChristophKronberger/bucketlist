@@ -13,15 +13,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: test
-        run: | 
-          cd $GITHUB_WORKSPACE && echo $(ls -a)
       - name: Install OpenVPN
         run: |
           sudo apt-get update
           sudo apt-get --assume-yes --no-install-recommends install openvpn
       - name: Setup VPN config
         run: |
+          export VPN_HOST="${{ secrets.STAGE_VPN_SERVER }}"
           echo "${{ secrets.CA_CRT }}" > ca.crt
           echo "${{ secrets.STAGE_VPN_USER_PASSWORD }}" > secret.txt
           echo "${{ secrets.TLS_KEY }}" > tls.key
