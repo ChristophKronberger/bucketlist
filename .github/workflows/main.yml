@@ -11,9 +11,11 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
+
       - name: test
         run: | 
-          sudo echo $(find / -name config.ovpn)
+          cd $GITHUB_WORKSPACE && echo $(ls -a)
       - name: Install OpenVPN
         run: |
           sudo apt-get update
