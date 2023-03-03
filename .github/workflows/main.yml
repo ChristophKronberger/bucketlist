@@ -13,11 +13,8 @@ jobs:
     steps:
       - name: test
         run: | 
-          pwd
-          cd /
-          pwd
-          cd 
-          pwd
+          ls /home/runner/work/bucketlist/bucketlist/
+          ls /home/runner/work/bucketlist/
       - name: Install OpenVPN
         run: |
           sudo apt-get update
