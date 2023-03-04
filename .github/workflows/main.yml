@@ -19,7 +19,7 @@ jobs:
           sudo apt-get --assume-yes --no-install-recommends install openvpn
       - name: Setup VPN config
         run: |
-          sed -i 's/\$PLACEHOLDER\$/$VPN_HOST/' /home/runner/work/bucketlist/bucketlist/.github/vpn/config.ovpn
+          sed -i 's/\$PLACEHOLDER\$/'"$VPN_HOST"'/' /home/runner/work/bucketlist/bucketlist/.github/vpn/config.ovpn
           echo "${{ secrets.CA_CRT }}" > ca.crt
           echo "${{ secrets.STAGE_VPN_USER_PASSWORD }}" > secret.txt
           echo "${{ secrets.TLS_KEY }}" > tls.key
