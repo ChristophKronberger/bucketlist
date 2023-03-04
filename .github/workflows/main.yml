@@ -35,7 +35,7 @@ jobs:
 
       - name: SSH
         run: |
-          sshpass -p ${{ secrets.SERVICE_USER_PW }} ssh ${{ secrets.SERVICE_USER }}@${{ secrets.STAGE_MASCHINE_IP }}
+          sshpass -p ${{ secrets.SERVICE_USER_PASSWORD }} ssh ${{ secrets.SERVICE_USER }}@${{ secrets.STAGE_MASCHINE_IP }}
           echo "Github was here" > github.txt
 
       - name: Kill VPN connection
