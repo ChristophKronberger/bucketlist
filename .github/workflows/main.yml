@@ -35,9 +35,11 @@ jobs:
         run: sudo apt-get install sshpass
 
       - name: SSH
+        timeout-minutes: 2
         run: |
           sshpass -f ssh.key ssh -o StrictHostKeyChecking=no -tt ${{ secrets.SERVICE_USER }}@${{ secrets.STAGE_MASCHINE_IP }}
           echo "Github was here" > github.txt
+          exit
 
       - name: Kill VPN connection
         if: always()
