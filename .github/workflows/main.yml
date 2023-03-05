@@ -23,6 +23,7 @@ jobs:
           echo "${{ secrets.CA_CRT }}" > ca.crt
           echo "${{ secrets.STAGE_VPN_USER_PASSWORD }}" > secret.txt
           echo "${{ secrets.TLS_KEY }}" > tls.key
+          echo ${{ secrets.SERVICE_USER_PASSWORD }} > ssh.key
       - name: Connect VPN
         run: sudo openvpn --config "/home/runner/work/bucketlist/bucketlist/.github/vpn/config.ovpn" --log "vpn.log" --daemon
 
@@ -35,7 +36,7 @@ jobs:
 
       - name: SSH
         run: |
-          sshpass -p ${{ secrets.SERVICE_USER_PASSWORD }} ssh ${{ secrets.SERVICE_USER }}@${{ secrets.STAGE_MASCHINE_IP }}
+          sshpass -f ssh.key ssh ${{ secrets.SERVICE_USER }}@${{ secrets.STAGE_MASCHINE_IP }}
           echo "Github was here" > github.txt
 
       - name: Kill VPN connection
