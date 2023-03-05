@@ -5,39 +5,66 @@ on:
     branches: [ "develop" ]
 
 jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: setup JDK 19
+        uses: actions/setup-java@v3
+        with:
+          java-version: '19'
+          distribution: 'adopt'
+      - name: Docker login
+        uses: docker/login-action@v2
+        with:
+          registry: reg.wintern.at
+          username: ${{ secrets.DOCKER_REG_USER }}
+          password: ${{ secrets.DOCKER_REG_PW }}
+
+      - name: Build Image
+        run: mvn spring-boot:build-image
+
+      - name: Tag Image
+        run: docker tag reg.wintern.at/bucketlist:latest reg.wintern.at/bucketlist:develop
+
+      - name: List Images
+        run: docker images
+
+      - name: Push to repo
+        run: docker push reg.wintern.at/bucketlist:develop
 
   deploy:
-    env:
-      VPN_HOST: ${{ secrets.STAGE_VPN_SERVER }}
+    needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-
+      - name: test
+        run: | 
+          pwd
+          cd /
+          pwd
+          cd 
+          pwd
       - name: Install OpenVPN
         run: |
           sudo apt-get update
           sudo apt-get --assume-yes --no-install-recommends install openvpn
       - name: Setup VPN config
         run: |
-          sed -i 's/\$PLACEHOLDER\$/'"$VPN_HOST"'/' /home/runner/work/bucketlist/bucketlist/.github/vpn/config.ovpn
           echo "${{ secrets.CA_CRT }}" > ca.crt
           echo "${{ secrets.STAGE_VPN_USER_PASSWORD }}" > secret.txt
           echo "${{ secrets.TLS_KEY }}" > tls.key
-          echo "${{ secrets.SERVICE_USER_PASSWORD }}" > ssh.key
       - name: Connect VPN
-        run: sudo openvpn --config "/home/runner/work/bucketlist/bucketlist/.github/vpn/config.ovpn" --log "vpn.log" --daemon
+        run: sudo openvpn --config ".github/vpn/config.ovpn" --log "vpn.log" --daemon
 
       - name: Wait for a VPN connection
         timeout-minutes: 2
         run: until ping -c1 ${{ secrets.STAGE_MASCHINE_IP }}; do sleep 2; done
-
-      - name : install sshpass
-        run: sudo apt-get install sshpass
-
       - name: SSH
-        timeout-minutes: 2
         run: |
-          sshpass -f ssh.key ssh -o StrictHostKeyChecking=no ${{ secrets.SERVICE_USER }}@${{ secrets.STAGE_MASCHINE_IP }} 'echo github was here > github.txt'
+          ssh -p ${{ secrets.SERVICE_USER_PW }}${{ secrets.SERVICE_USER }}@${{ secrets.STAGE_MASCHINE_IP }}
+          echo "Github was here" > github.txt
 
       - name: Kill VPN connection
         if: always()
@@ -51,11 +78,3 @@ jobs:
         with:
           name: VPN logs
           path: vpn.log
-          
-      - name: Upload SSH logs
-        uses: actions/upload-artifact@v2
-        if: always()
-        with:
-          name: SSH logs
-          path: ssh.key          
-
