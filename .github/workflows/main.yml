@@ -37,9 +37,7 @@ jobs:
       - name: SSH
         timeout-minutes: 2
         run: |
-          sshpass -f ssh.key ssh -o StrictHostKeyChecking=no -tt ${{ secrets.SERVICE_USER }}@${{ secrets.STAGE_MASCHINE_IP }}
-          echo "Github was here" > github.txt
-          exit
+          sshpass -f ssh.key ssh -o StrictHostKeyChecking=no ${{ secrets.SERVICE_USER }}@${{ secrets.STAGE_MASCHINE_IP }} 'echo github was here > github.txt'
 
       - name: Kill VPN connection
         if: always()
