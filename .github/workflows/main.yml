@@ -51,3 +51,11 @@ jobs:
         with:
           name: VPN logs
           path: vpn.log
+          
+      - name: Upload SSH logs
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: SSH logs
+          path: ssh.key          
+
